@@ -1,0 +1,85 @@
+
+--Name: Scott Diddams
+--File: SQLQuiz02.sql
+--Date: 20JAN21
+
+--1. How many seafood products do we have?
+
+select count(productname) as seafoodnum from products where categoryid =8;
+seafoodnum
+12
+
+--2. Names and IDs of our seafood products
+
+select productname, productid from products where categoryid =8;
+ProductName|ProductID
+Ikura|10
+Konbu|13
+Carnarvon Tigers|18
+Nord-Ost Matjeshering|30
+Inlagd Sill|36
+Gravad lax|37
+Boston Crab Meat|40
+Jack's New England Clam Chowder|41
+Rogede sild|45
+Spegesild|46
+Escargots de Bourgogne|58
+Röd Kaviar|73
+
+--3. Average price of seafood products?
+
+select sum(unitprice)/12 as avgseafoodprice from products where categoryid=8;
+avgseafoodprice
+20.6825
+
+--4. Highest priced seafood product
+
+select productname, productid, unitprice from products where categoryid=8 order by unitprice desc limit 1;
+ProductName|ProductID|UnitPrice
+Carnarvon Tigers|18|62.5
+
+--5. Lowest priced seafood product?
+
+select productname, productid, unitprice from products where categoryid=8 order by unitprice asc limit 1;
+ProductName|ProductID|UnitPrice
+Konbu|13|6.0
+
+--6. how many customers do we have in denmark?
+
+select count(customerid) as denmarkcount from customers where country like'%denmark%';
+denmarkcount
+2
+
+--7. Cutomer names and ID for our danish friends?
+
+select customerid, companyname from customers where country like'%denmark%';
+CustomerID|CompanyName
+SIMOB|Simons bistro
+VAFFE|Vaffeljernet
+
+--8. Which customers have no fax number?
+
+select customerid, companyname from customers where fax ='';
+CustomerID|CompanyName
+ANTON|Antonio Moreno Taquería
+BSBEV|B''s Beverages
+CHOPS|Chop-suey Chinese
+COMMI|Comércio Mineiro
+FAMIA|Familia Arquibaldo
+FOLKO|Folk och fä HB
+GODOS|Godos Cocina Típica
+GOURL|Gourmet Lanchonetes
+GREAL|Great Lakes Food Market
+ISLAT|Island Trading
+KOENE|Königlich Essen
+LETSS|Let''s Stop N Shop
+MORGK|Morgenstern Gesundkost
+PRINI|Princesa Isabel Vinhos
+QUEEN|Queen Cozinha
+QUICK|QUICK-Stop
+RICAR|Ricardo Adocicados
+RICSU|Richter Supermarkt
+SAVEA|Save-a-lot Markets
+THEBI|The Big Cheese
+TORTU|Tortuga Restaurante
+WELLI|Wellington Importadora

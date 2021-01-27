@@ -1,0 +1,176 @@
+1. How does the book describe the difference between imperative and declarative languages?
+
+	Declarative means you tell the computer WHAT you want it to get you and let the built in mathmatecal formulas provide the results. 
+	Imperative means you tell the computer HOW you want it to get you something, then provide the inputs to generate an outcome.
+
+2. List three categories of command statements in SQL.
+
+	Data definition Language - DDL - Deals wth object definitions (Create, Alter, & Drop)
+	Data Manipulation Language - DML - Deals with querying and modifying data (select, insert, update, delete, truncate, & Merge)
+	Data Control Language - DCL - Deals with Permissions (Grant, Revoke)
+
+3. Give an informal definition of database as used in the expression “relational database management system.” 
+
+	In the RDBMS, a database is constricted by the definition of a set in set theory and the concept of predication,
+	which means the database must involve a defined subjectively percieved collection of items
+	that are predicated on some binary property which can be said to be true or false.
+	
+Give an informal definition of database as used in the expression “Human Resources database.”
+
+	In Human Resources, a database comprises the defined values and properties associated with a subjectively percieved collection of human beings
+
+4. The book states that, “[t]he goal of the relational model is to enable consistent representation of
+data with minimal or no redundancy and without sacrificing completeness. . . ” Briefly state your
+understanding of minimal or no redundancy and completeness. Why do you think that these values
+are important?
+
+	Representing data with little to no redundancy while maintaining completeness is about being as efficient as reasonably possible.
+	Efficiency in database management is important in the preservation of finite computing power and storage and reduces complexity in representation.
+
+5. What is the difference between two-valued logic, three-valued logic, and four-valued logic? How does
+SQL implement three-valued predicate logic?
+
+	two-valued logic allows for a binary value to be applied to an object or concept, true or false.
+	Three valued logic allows for the value "unknown" to be applied to an object or concept.
+	Four-valued logic allows the unknown value to manifest as applicable or non-applicable/irrelevant, giving four posible values.
+	
+	SQL implements three-value logic by assigning a special "null" marker to a predicate involving a missing or unknown value.
+
+6. How does SQL enforce entity integrity? What is entity integrity?
+
+	SQL uses the application of "constraints" defined in the data model (ie primary key) to enforce entity integrity through the RDBMS
+	An entity has entity integrity when the primary key value of a row is unique and known/non-null (ie Scott Diddams does not appear twice)
+
+7. How does SQL enforce referential integrity? What is referential integrity?
+
+	SQL Enforces Referential integrity with "foreign keys" which may be primary keys from a different relation.
+	A database has referential integrity when defined keys of reference do not differ between relations
+
+8. What is a relation as defined in the textbook? A one word answer to this question is sufficient.
+
+	A defined table - A set made of a heading (columns/Attributes) and body (rows/tuples)
+
+9. Relational databases are based on three mathematical concepts: set theory, predicate logic, and relational algebra.
+(a) Please give your brief understanding of set theory as described in the text. What is a set?
+
+	A set is a collection of distinct, defined objects or concepts that we percieved to be related.
+
+(b) Please give your brief understanding of predicate logic as described in the text. What is predicate
+logic?
+
+	Predicate logic applies to properties or concepts which can be said to be either true or false.
+
+(c) Please give your brief understanding of relational algebra. What is selection? What is projection?
+This is not in the book.
+
+	Relational algebra is a process for modeling and communicating representative data based on defined sets of logical rules.
+	Selection is the process of narrowing down the tuples, or rows of data to meet the desired outcome of a query.
+	Projection is the process of narrowing down the headings/columns to meet the desired outcome of a query.
+
+10. Is this table in first normal form? Why or why not? If it is not, how would you change it?
+
+create table faculty (
+	facID int primary key,
+	facName text,
+	facCreds text);
+	
+	This is not 1NF because the attributes are not all single-valued.
+	IF facCreds is defined as, for example "highest education level achieved" or "qualified/not qualified" it will be 1NF.
+
+
+11. Is this table in second normal form? Why or why not? If it is not, how would you change it?
+
+create table pets (
+	ownerID int primary key,
+	petID int primary key,
+	ownerFirstName text,
+	ownerLastName text,
+	petName text,
+	petType text);
+	
+	This table is NOT 2NF because the primary key is a composite of two attributes which may not be unique
+	a tuple may consist of one owner with two unique pets or two unique owners (married) with a single unique petID
+	the primary key ought to be either the petID or ownerID, not both
+
+12. Is this table in third normal form? Why or why not? If it is not, how would you change it?
+
+create table friends (
+	friendID int primary key,
+	friendName text,
+	friendStreet text,
+	friendCity text,
+	friendState text,
+	friendZip text);
+	
+	This table is NOT 3NF as the latter 4 attributes have transitive dependencies - if the firend's city changes so will his street/zip etc...
+
+13. List the components of a four-part object name.
+
+	Instance.Database.Schema.Objects
+
+14. What is the difference between declarative data integrity and procedural data integrity?
+
+	Declarative data integrity is a result of the nature of the model itself, procudural is a result of additional commands or triggers
+
+
+Reading Notes:
+
+SQL - Structured Query Language - based on the relational model -T-SQL: "Transact"-SQL
+	Severl categories of statements:
+		Data definition Language - DDL - Deals wth object definitions (Create, Alter, & Drop)
+		Data Manipulation Language - DML - Deals with querying and modifying data (select, insert, update, delete, truncate, & Merge)
+		Data Control Language - DCL - Deals with Permissions (Grant, Revoke)
+		
+	Set Theory - mthematical branch from which the relational model is derrived
+		"Set" === Any collection, M, into a whole of definite, distinct objects m (elements of M), which are of our perception or thought
+			"perception" - means set definitions are subjective
+			"object" can be abstract
+			
+	Predicate Logic - another branch from which relational model is derrived
+		"predicate" ===a property or an expression they either holds or does not hold (true or false)
+		
+	The Relational Model - a semantic model for data management and manipulation based on set theory and predicate logic	
+		purpose: enable consistent representation with minimal redundancy - max efficiency
+	
+	Relation - made of a heading a body
+		Heading = set of attributes (Columns)
+		Body = set of rows, where each element is identified by a key
+		
+	Type - Constrains an attribute to a certain set of possible or valid values
+	
+	Valued Logic
+		Two-valued logic - true or false - follows law of excluded middle
+		Three-value logic - true, false, or unknown
+		Four-value logic - true, false, unknown but applicable, unknown but non-applicable
+	
+	Keys
+		Primary - unique attribute used to identify a database uniquely
+		Composite - primary key composed of multiple attributes that only together produce unique result
+		Foreign - the primary key of another relation/table
+		
+		transitive functional dependency - changing one attribute will force another attribute to change as well 
+			(ie Column sex (M/F) and column title (Ms./Mr.) have transitive dependency)
+	
+	1st Normal form 1NF
+		Tuples/Rows are unique and attributes/columns are atomic (single-valued)
+		
+	2NF
+		Data must meet the 1NF rules
+		The primary key is represented by a single column - no composite keys
+	
+	3NF
+		Meet 2NF
+		have no transitive dependencies
+		
+	SQL Server Instance - an installation of SQL Server database engine or service
+	
+	Database
+		A database is a container of objects (ie orders)
+		Objects are organized/compartmentalized into Schemas (ie sales)
+		a 2-part object name might include a schema and object (Sales.Orders)
+		3-part name includes the database name
+		4-part name includes the instance name
+		
+	Data integrity
+		Declarative - data integrity enforced as part of the model
+		Procedural - data integrity enforced with code like stored procedures or triggers

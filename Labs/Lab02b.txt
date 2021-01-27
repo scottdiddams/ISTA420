@@ -1,0 +1,263 @@
+
+-- Name:Scott Diddams
+-- Title: Lab02b.sql
+-- Date: 20 January, 2021
+
+--1. Who are our customers in North America?
+
+select customerid, companyname, country from customers where country = 'USA' or 'Mexico' or 'Canada';
+CustomerID|CompanyName|Country
+GREAL|Great Lakes Food Market|USA
+HUNGC|Hungry Coyote Import Store|USA
+LAZYK|Lazy K Kountry Store|USA
+LETSS|Let''s Stop N Shop|USA
+LONEP|Lonesome Pine Restaurant|USA
+OLDWO|Old World Delicatessen|USA
+RATTC|Rattlesnake Canyon Grocery|USA
+SAVEA|Save-a-lot Markets|USA
+SPLIR|Split Rail Beer & Ale|USA
+THEBI|The Big Cheese|USA
+THECR|The Cracker Box|USA
+TRAIH|Trail''s Head Gourmet Provisioners|USA
+WHITC|White Clover Markets|USA
+
+--2. What orders were placed in April, 1998?
+
+select OrderID, orderdate from orders where orderdate like'%1998-04%' and shipcountry = 'Germany';
+OrderID|OrderDate
+10991|1998-04-01
+10996|1998-04-02
+10999|1998-04-03
+11011|1998-04-09
+11012|1998-04-09
+11020|1998-04-14
+11021|1998-04-14
+11028|1998-04-16
+11036|1998-04-20
+11046|1998-04-23
+11058|1998-04-29
+
+--3. What sauces do we sell?
+
+select productname from products where productname like '%sauce%';
+ProductName
+Northwoods Cranberry Sauce
+Louisiana Fiery Hot Pepper Sauce
+
+--4. What is the name of our dried fruit product?
+
+select productname from products where productname like'%dried%';
+ProductName
+Uncle Bob's Organic Dried Pears
+Manjimup Dried Apples
+
+--5. What employees ship products to germany in December?
+
+select distinct employeeID from orders where orderdate like '%-12-%' order by employeeid asc;
+EmployeeID
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+--6. What is the total and net amount of all orders for product 19 where the customer took a discount?
+
+--select orderid, quantity, unitprice, discount, productid, (quantity*unitprice) as total, (quantity*unitprice-quantity*unitprice*discount) as net from order_details where productid=19 and discount>0;
+
+select sum(quantity*unitprice) as total, sum(quantity*unitprice-quantity*unitprice*discount) as net from order_details where productid=19;
+total|net
+6159.5|5862.62
+
+--7. Provide a list of employees by title, first name, last name with employees position under their name and a line separating each employee.
+
+.headers on
+.mode column
+select titleofcourtesy ||' '|| firstname ||' '|| lastname || '
+   '|| title || '
+   ' from employees;
+titleofcourtesy ||' '|| firstname ||' '|| lastname || '
+   '|| title || '
+   '
+------------------------------------------------------------------------------
+Ms. Nancy Davolio
+   Sales Representative
+                                    
+Dr. Andrew Fuller
+   Vice President-Sales
+                                    
+Ms. Janet Leverling
+   Sales Representative
+                                  
+Mrs. Margaret Peacock
+   Sales Representative
+                                
+Mr. Steven Buchanan
+   Sales Manager
+                                         
+Mr. Michael Suyama
+   Sales Representative
+                                   
+Mr. Robert King
+   Sales Representative
+                                      
+Ms. Laura Callahan
+   Inside Sales Coordinator
+                               
+Ms. Anne Dodsworth
+   Sales Representative
+                                   
+   
+--8. List our customers and the first name only of the customer representative.
+
+select companyname, substr(contactname, 1, instr(contactname,' ')) as contactfirstname from customers;
+CompanyName                           contactfirstname
+------------------------------------  ----------------
+CompanyName                                           
+Alfreds Futterkiste                   Maria           
+Ana Trujillo Emparedados y helados    Ana             
+Antonio Moreno Taquería               Antonio         
+Around the Horn                       Thomas          
+Berglunds snabbköp                    Christina       
+Blauer See Delikatessen               Hanna           
+Blondesddsl père et fils              Frédérique      
+Bólido Comidas preparadas             Martín          
+Bon app''                             Laurence        
+Bottom-Dollar Markets                 Elizabeth       
+B''s Beverages                        Victoria        
+Cactus Comidas para llevar            Patricio        
+Centro comercial Moctezuma            Francisco       
+Chop-suey Chinese                     Yang            
+Comércio Mineiro                      Pedro           
+Consolidated Holdings                 Elizabeth       
+Drachenblut Delikatessen              Sven            
+Du monde entier                       Janine          
+Eastern Connection                    Ann             
+Ernst Handel                          Roland          
+Familia Arquibaldo                    Aria            
+FISSA Fabrica Inter. Salchichas S.A.  Diego           
+Folies gourmandes                     Martine         
+Folk och fä HB                        Maria           
+Frankenversand                        Peter           
+France restauration                   Carine          
+Franchi S.p.A.                        Paolo           
+Furia Bacalhau e Frutos do Mar        Lino            
+Galería del gastrónomo                Eduardo         
+Godos Cocina Típica                   José            
+Gourmet Lanchonetes                   André           
+Great Lakes Food Market               Howard          
+GROSELLA-Restaurante                  Manuel          
+Hanari Carnes                         Mario           
+HILARION-Abastos                      Carlos          
+Hungry Coyote Import Store            Yoshi           
+Hungry Owl All-Night Grocers          Patricia        
+Island Trading                        Helen           
+Königlich Essen                       Philip          
+La corne d''abondance                 Daniel          
+La maison d''Asie                     Annette         
+Laughing Bacchus Wine Cellars         Yoshi           
+Lazy K Kountry Store                  John            
+Lehmanns Marktstand                   Renate          
+Let''s Stop N Shop                    Jaime           
+LILA-Supermercado                     Carlos          
+LINO-Delicateses                      Felipe          
+Lonesome Pine Restaurant              Fran            
+Magazzini Alimentari Riuniti          Giovanni        
+Maison Dewey                          Catherine       
+Mère Paillarde                        Jean            
+Morgenstern Gesundkost                Alexander       
+North/South                           Simon           
+Océano Atlántico Ltda.                Yvonne          
+Old World Delicatessen                Rene            
+Ottilies Käseladen                    Henriette       
+Paris spécialités                     Marie           
+Pericles Comidas clásicas             Guillermo       
+Piccolo und mehr                      Georg           
+Princesa Isabel Vinhos                Isabel          
+Que Delícia                           Bernardo        
+Queen Cozinha                         Lúcia           
+QUICK-Stop                            Horst           
+Rancho grande                         Sergio          
+Rattlesnake Canyon Grocery            Paula           
+Reggiani Caseifici                    Maurizio        
+Ricardo Adocicados                    Janete          
+Richter Supermarkt                    Michael         
+Romero y tomillo                      Alejandra       
+Santé Gourmet                         Jonas           
+Save-a-lot Markets                    Jose            
+Seven Seas Imports                    Hari            
+Simons bistro                         Jytte           
+Spécialités du monde                  Dominique       
+Split Rail Beer & Ale                 Art             
+Suprêmes délices                      Pascale         
+The Big Cheese                        Liz             
+The Cracker Box                       Liu             
+Toms Spezialitäten                    Karin           
+Tortuga Restaurante                   Miguel          
+Tradição Hipermercados                Anabela         
+Trail''s Head Gourmet Provisioners    Helvetius       
+Vaffeljernet                          Palle           
+Victuailles en stock                  Mary            
+Vins et alcools Chevalier             Paul            
+Die Wandernde Kuh                     Rita            
+Wartian Herkku                        Pirkko          
+Wellington Importadora                Paula           
+White Clover Markets                  Karl            
+Wilman Kala                           Matti           
+Wolski  Zajazd                        Zbyszek         
+
+--9. list customer contacts by alphabetical last name (doesnt work)
+
+--select substr(contactname,(instr(contactname,' ')+1)||', '||substr(contactname, 1, instr(contactname,' ')-1) as abcname from customers order by abcname;
+
+--10. most common pairing of customers and employees with the greatest order volume (num orders placed), no pairings with minimal orders
+
+select customerid, employeeid, count(orderid) from orders group by customerid, employeeid having count(orderid)>=5 order by count(orderid) desc;
+CustomerID  EmployeeID  count(orderid)
+----------  ----------  --------------
+BERGS       3           6             
+FOLKO       8           6             
+QUICK       2           6             
+SAVEA       1           6             
+ERNSH       1           5             
+ERNSH       4           5             
+FRANK       1           5             
+HILAA       4           5             
+HUNGO       3           5             
+QUICK       3           5             
+QUICK       4           5             
+RATTC       1           5             
+
+--11. highest average selling product by product id where avg = total sales/quantity; limit top 20
+
+select productid, sum(unitprice*quantity) as totsales, count(quantity) as totquant, avg((unitprice*quantity)/quantity) as avgsell from order_details group by productid order by avgsell desc limit 20;
+ProductID  totsales  totquant  avgsell         
+---------  --------  --------  ----------------
+38         149984.2  24        245.933333333333
+29         87736.4   32        116.043125      
+9          8827.0    5         93.12           
+20         23635.8   16        75.9375         
+18         31987.5   27        59.7222222222222
+59         76296.0   54        51.1296296296296
+51         44742.6   39        50.5538461538462
+62         49827.9   48        46.4125         
+43         25079.2   28        43.0428571428571
+28         26865.6   33        41.9757575757576
+27         15231.5   9         40.9666666666667
+63         17696.3   17        40.7941176470588
+8          13760.0   13        38.7692307692308
+12         12866.8   14        36.9142857142857
+17         35482.2   37        36.4702702702703
+56         45121.2   50        35.416          
+69         24307.2   31        33.4451612903226
+60         50286.0   51        32.1333333333333
+72         25738.8   38        32.0368421052631
+64         23009.0   30        31.0333333333333
+
+--quiz 2 due tonight (do your best)
+--C# ch3 HW
+--no more lab

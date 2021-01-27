@@ -1,0 +1,73 @@
+## SQL CH03 HW
+
+1. In general, why would you even want to join two (or more) tables together? This is a good time to
+think about the nature of relational algebra.
+
+*Joins allow you to apply one relation to another and filter to get a desired outcome*
+
+2. Describe in your own words the output from an inner join.
+
+*Applies a cartesian product between the two input tables like a cross join, and then filters rows based on a specified predicate*
+```
+SELECT E.empid, E.firstname, E.lastname, O.orderid
+FROM HR.Employees AS E
+  INNER JOIN Sales.Orders AS O
+    ON E.empid = O.empid;
+//Inner join is the default - "inner" can be excluded - this matches the tables via employee id - "ON" may be replaced with "WHERE" depending on syntax
+```
+
+3. Describe in your own words the output from an outer join.
+
+*apply cartesian math and the ON/WHERE clause and you use the LEFT/RIGHT/FULL OUTER keyword which preserves the table on the right/left/full side - so that if a tuple from the preserved table is not matched, it is still displayed in the query results.
+
+4. Describe in your own words the output from an cross join.
+
+*Every single tuple in table A inherits the entirety of Table B - ie if table A has 10 rows and table B has 3 rows, SELECT FROM A, CROSS JOIN B gives a new table with 30 rows - if conducting a self join - you must use aliases for tables* 
+```
+SELECT C.custid, E.empid
+FROM Sales.Customers AS C
+  CROSS JOIN HR.Employees AS E;
+```
+
+5. A convenient mnemonic for remembering the various joins is “Ohio.” Why is this true?
+
+*one type inner join (O), one type full outer join (O), two types L/R outer joins (hi)*
+
+6. Give an example of a composite join.
+
+*Composite joins are used when you need to match multiple attributes from each table, such as when the primary/foreign key are based on more than one attribute - use the AND keyword*
+```
+FROM dbo.Table1 AS T1
+  INNER JOIN dbo.Table2 AS T2
+    ON T1.col1 = T2.col1
+    AND T1.col2 = T2.col2
+```
+*example: an IoT input from two nodes each with a primary key based on time & location contributing to two separate relations*
+
+7. What is the difference between the following two queries? The business problem is “How many orders
+do we have from each customer?”
+
+================first query===============
+SELECT C.custid, COUNT(*) AS numorders
+FROM Sales.Customers AS C
+LEFT OUTER JOIN Sales.Orders AS O
+ON C.custid = O.custid
+GROUP BY C.custid;
+================second query===============
+SELECT C.custid, COUNT(O.orderid) AS numorders
+FROM Sales.Customers AS C
+LEFT OUTER JOIN Sales.Orders AS O
+ON C.custid = O.custid
+GROUP BY C.custid;
+
+*Query one counts every line of the joined relation based on cusomterID from the "customer" table, query two counts every orderID in the joined relation originating from the "orders" table. Unless there are customers with zero orders, the two queries return the same result. The count() aggregate canot tell if a row represents an order, if there are customers with no orders, they will be counted falsely*
+
+8. What might be one reason the following query does not return the column custID in this query?
+
+SELECT C.custid, C.companyname, O.orderid, O.orderdate
+FROM Sales.Customers AS C
+LEFT OUTER JOIN Sales.Orders AS O
+ON C.custid = O.custid
+WHERE O.orderdate >= ’20160101’;
+
+*The query did not ask to display custID from the Orders Table, which is the key used to join both tables*

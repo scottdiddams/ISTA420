@@ -1,0 +1,76 @@
+## SQL HW 02b
+
+1. What is a data type? Why do we have data types?
+
+*data types define the characteristics of the (binary) data that can be stored in a column. data type assignment can positvely or negatively impact the performance of your database. CHAR/VARCHAR use 2 bytes of storage, while unicode NCHAR/NVARCHAR use 1 byte.*
+
+2. What is a collation? Name four elements of a collation.
+
+*Collation is a property that tells the machine how to compare and sort the character data. Collation's four levels: instance, database, column, and expression* 
+
+3. How would you strip whitespace from a string? For example, suppose you had “ Dave ” but
+wanted only “Dave”.
+```
+Select substring(' Dave ', 2, 5); or Select rtrim(ltrim(' Dave '));
+```
+4. Suppose you wanted to make a list of every college and university that was called an Institute from
+the college table. Write the query.
+```
+Select * from college where collegename contains N'institute';
+Select * from college where collegename like '%institute%';
+```
+5. How would you find the number of the index of the first space in a string? For example, the index of
+the first space in “Barack Hussein Obama” would be 7.
+```
+Select Charindex(' ', 'Barack Hussein Obama');
+```
+6. How would you select just the first name in a list of the presidents. Each record looks like the: ”George
+Washington”, ”John Adams”, ”Thomas Jefferson”. First names can be an arbitrary length, from “Cal”
+to “Benjamin.” (e.g., Cal College, Benjamin Harrison)
+```
+select left(presName, charindex(' ',presName)) as firstname from presidents;
+select presName from string_split(presName,' ',1) as firstname;
+select substring(presName, 0, ' ');
+```
+7. What is the order of precedence for the logical operators?
+```
+(~ not); (*,/,% math); (+,-,&,^,| ); (=,>,<,>=,<>[not equal],!=,!>,!< comparrisons); NOT; AND; (ALL,ANY,BETWEEN,LIKE,IN,OR,SOME); = asignment
+simplified - NOT, AND, OR
+```
+8. What is the order of precedence for the math operators?
+
+*PEMDAS*
+
+9. What is the difference between a simple and a searched CASE expression?;
+
+*the simple case form has a single test value or expression that is compared to a list of possible values in the when clauses. The SEARCHED CASE form is more flexible in the sense that you can specify predicates in the when clauses*
+
+10. How would you turn a list of names like this: “LASTNAME, FIRSTNAME”, to a list like this:“FIRSTNAME LASTNAME”?
+```
+SELECT substring(lastFirst, charindex(',', replace(lastFirst, ' ', '') +1, len(lastFirst))
+ + ' ' 
+ + left(lastFirst, charindex(',', lastFirst)-1) as firstLast from names
+```
+11. How would you turn a list of names like this: “FIRSTNAME LASTNAME”, to a list like this: “LASTNAME, FIRSTNAME”?
+```
+select substring(firstLast, charindex(' ', replace(' ', '')+1, len(firstLast))
++', '
++ left(firstLast, charindex(' ', firstLast)-1) as lastFirst from names
+```
+
+Notes:
+
+Core Functions
+
+REPLACE(string, substring1, substring2) - replaces all occurrances of substr 1 in str, with substr2
+
+SUBSTRING(string, start, length) - extracts a str starting at position start that is length chars long
+
+LEN(string) - number of chars in the input string
+
+LEFT(string, n) - return requested number of n chars from the left
+
+CHARINDEX(substring, string[, start_pos]) - returns the position of substr within str, start looking at start_pos
+in sqlite use "in string" instr(string, substring)
+
+in sqlite the concat '+' is replaced by '||'

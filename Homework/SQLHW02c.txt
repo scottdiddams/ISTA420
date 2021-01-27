@@ -1,0 +1,101 @@
+##SQL-HW-02C
+
+1. List the date/time types in T-SQL.
+
+```
+DATETIME //YYYYMMDD hh:mm:ss.nnn
+SMALLDATETIME //YYYYMMDD hh:mm
+DATE //YYYY-MM-DD
+TIME //hh:mm:ss.nnnnnnn
+DATETIME2 //YYYY-MM-DD hh:mm:ss.nnnnnnn
+DATETIMEOFFSET //YYYY-MM-DD hh:mm:ss.nnnnnnn [+|-] hh:mm
+```
+
+
+2. How do you express a date/time literal in T-SQL?
+
+*string literal = "YYYYMMDD" - use a character string to express a date/time value, and convert it to a date/time type:*
+```
+orderdate = CAST('20160212' AS DATE);
+```
+
+3. What is the setting DATEFORMAT used for?
+
+*determines how SQL server interprets the literals you enter - use the command SET DATEFORMAT:*
+```
+SET LANGUAGE British;
+SELECT CAST('02/12/2016' AS DATE); ///Outputs 2016-12-02
+
+SET LANGUAGE us_english;
+SELECT CAST('02/12/2016' AS DATE); //Outputs 2016-02-12
+```
+
+4. Wriite a T-SQL snippet changing the date format to German. Read the documentation on how to do
+this.
+
+```
+SET LANGUAGE German;
+SELECT CAST('20210124' AS DATE);
+
+5. What is the difference between CAST(), CONVERT(), and PARSE()?
+
+*CONVERT: converts the literal to the requested data type and alloes you to specify a style*
+```
+SELECT CONVERT(DATE, '02/12/2016', [style]) //ex: style 101 produces "February 12, 2016"; style 103 produces "December 2, 2016"
+```
+*Parse: parse a value as a requested type and indicate the culture*
+```
+SELECT PARSE('02/12/2016' AS DATE USING 'en-US'); //Produces February 12, 2016; if 'en-GB', produces December 2, 2016
+```
+*Cast simply changes the type - as above* 
+
+6. What function returns the current date? This is very useful in a table that maintains a log of events,
+such as user logins.
+
+```
+select date('now');
+```
+
+7. How do you add one day to the current date? Add one week? Add one month? Add one year?
+
+```
+select date('now', '+1 day');
+select date('now','+1 week');
+select date('now', '+1 month', '+1 year');
+```
+
+8. Write a SQL snippet to return the number of years between your birth date and today’s date.
+
+```
+select date('now')-date('1993-12-08');
+```
+
+9. How do you check a string literal to see if it represents a valid date?
+
+*use the ISDATE(expression) function*
+```
+IF ISDATE('2009-05-12 10:19:41.177') = 1  
+    PRINT 'VALID'  
+ELSE  
+    PRINT 'INVALID';
+```
+
+10. What does EOMONTH() do? Give an example of why this might be very useful.
+
+*EOMONTH(startDate [,monthToAdd]) returns the last day of the month containing a specified date with an optional offset*
+*Could be useful for tracking the expiration of a monthly service or budgetary constraint*
+
+11. Payments are due exactly 30 days from the date of the last function. Write a select query that calculates
+the date of the next payment. Pretend we want to update a column in a database that contains the
+date of the next payment. We will do this when we write UPDATE queries.
+
+```
+select date('lastDate','+30 day');
+```
+
+12. Suppose your son or daughter wants to run a query every day that tells them the number of days until
+their 16th birthday. Write a select query that does this.
+
+```
+select julianday('YYYY-MM-DD') - julianday('now');  //where YYYY-MM-DD is the 16th birthday
+```

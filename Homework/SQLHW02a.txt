@@ -1,0 +1,45 @@
+## SQL HW02a
+
+ 1. List the order of execution of a SQL query.
+
+*From - Where - Group By - Having - Select - "Expressions" - Distinct - Order By - Top/Offset-Fetch*
+
+ 2. What does the from clause do?
+
+*Selects the table(s) from which to apply the query (ex: FROM Sales.Orders is the orders table in the sales schema*
+
+ 3. What does the where clause do?
+
+*(a row filter) Filters elements of the relation to display only those that meet the specified criteria - invlolves a true or false predicate*
+
+ 4. What does the group by clause do?
+
+*Organizes the filtered data into groups according to specified metrics*
+
+ 5. What does the having clause do?
+
+*Filters the specified groups to select only those that meet a specified criteria*
+
+ 6. What does the select clause do?
+
+*Returns, for each group, the specified columns that meet the specified filter criteria above - you must start a query with the select clause*
+
+ 7. What does the distinct keyword do?
+
+*The distinct keyword selects for continued querying only distinct occurances of known values*
+
+ 8. What does the order by clause do?
+
+*Sorts the selected information by a specified column(s) - for presentation purposes (use "ASC" or "DESC" for ascending or descending)*
+
+ 9. What does the limit clause do? This is not in the book.
+
+*used to place an upper bound on the number of rows returned by the entire select statement
+
+ 10. What does the top clause do?
+
+*used to limit the number/percentage of rows your query returns (ie "SELECT TOP(5) [PERCENT] order id, FROM Sales.Orders ORDER BY orderdate DESC;" - gives the top five [%] most recent orders) - add "WITH TIES" to add tied data as desired*
+
+ 11. What do the offset . . . fetch . . . clauses do?
+ 
+*compensates for the shorcomings of the TOP clause in terms of standardization and lack of skipping - OFFSET-FETCH is essentially an extension of the order by clause where OFFSET indicates how many rows to skip, and FETCH indicates how many rows to filter after those you skip (ie "OFFSET 50 ROWS FETCH NEXT 25 ROWS ONLY" - there must be an order by clause within the query*
