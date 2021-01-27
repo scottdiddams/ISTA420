@@ -1,0 +1,125 @@
+.headers on
+
+--Title: SQL Lab 03
+--Date: 26 Jan 2021
+--Name: Scott Diddams
+
+--1. what is the order number and the date of each order sold by each employee?
+
+select E.employeeid, O.orderid, O.orderdate from employees as E inner join orders as O on o.employeeid = e.employeeid limit 10;
+EmployeeID|OrderID|OrderDate
+1|10258|1996-07-17
+1|10270|1996-08-01
+1|10275|1996-08-07
+1|10285|1996-08-20
+1|10292|1996-08-28
+1|10293|1996-08-29
+1|10304|1996-09-12
+1|10306|1996-09-16
+1|10311|1996-09-20
+1|10314|1996-09-25
+
+--2. List each territory by region
+
+select t.territorydescription, r.regiondescription from territories as t join region as r on t.regionid = r.regionid limit 10;
+TerritoryDescription|RegionDescription
+Westboro|Eastern                                           
+Bedford|Eastern                                           
+Georgetow|Eastern                                           
+Boston|Eastern                                           
+Cambridge|Eastern                                           
+Braintree|Eastern                                           
+Providence|Eastern                                           
+Hollis|Northern                                          
+Portsmouth|Northern                                          
+Wilton|Eastern                                           
+
+--3. What is the supplier name for each product alphabetically by supplier?
+
+select s.companyname, p.productname from suppliers as s join products as p on s.supplierid = p.supplierid order by s.companyname limit 10;
+CompanyName|ProductName
+Aux joyeux ecclésiastiques|Côte de Blaye
+Aux joyeux ecclésiastiques|Chartreuse verte
+Bigfoot Breweries|Sasquatch Ale
+Bigfoot Breweries|Steeleye Stout
+Bigfoot Breweries|Laughing Lumberjack Lager
+Cooperativa de Quesos 'Las Cabras'|Queso Cabrales
+Cooperativa de Quesos 'Las Cabras'|Queso Manchego La Pastora
+Escargots Nouveaux|Escargots de Bourgogne
+Exotic Liquids|Chai
+Exotic Liquids|Chang
+
+--4. For every order on 5 May 1998, how many of each item was ordered, and what was the price of the item?
+
+select o.orderid, d.productid, d.quantity, (d.unitprice*(1-d.discount)) as itemPrice from orders as o join order_details as d on o.orderid = d.orderid where o.orderdate = '1998-05-05' limit 10;
+OrderID|ProductID|Quantity|itemPrice
+11070|1|40|15.3
+11070|2|20|16.15
+11070|16|30|14.8325
+11070|31|20|12.5
+11071|7|15|28.5
+11071|13|10|5.7
+11072|2|8|19.0
+11072|41|40|9.65
+11072|50|22|16.25
+11072|64|130|33.25
+
+--5. For every order on 5 May, 1998 how many of each item was ordered giving the name of the item, and what was the price of the item?
+
+select o.orderid, p.productname, d.quantity, (d.unitprice*(1-d.discount)) as itemPrice from orders as o join order_details as d  on o.orderid = d.orderid join products as p on p.productid = d.productid where o.orderdate = '1998-05-05' limit 10;
+OrderID|ProductName|Quantity|itemPrice
+11070|Chai|40|15.3
+11070|Chang|20|16.15
+11070|Pavlova|30|14.8325
+11070|Gorgonzola Telino|20|12.5
+11071|Uncle Bob's Organic Dried Pears|15|28.5
+11071|Konbu|10|5.7
+11072|Chang|8|19.0
+11072|Jack's New England Clam Chowder|40|9.65
+11072|Valkoinen suklaa|22|16.25
+11072|Wimmers gute Semmelknödel|130|33.25
+
+--6. For every order in may, 1998, what was the customers name and the shippers name?
+
+select c.companyname as customerName, s.companyname as shipperName, o.orderdate from orders as o join shippers as s on s.shipperid = o.shipperid join customers as c on o.customerid = c.customerid where o.orderdate like'%1998-05%' limit 10;
+customerName|shipperName|OrderDate
+Save-a-lot Markets|Speedy Express|1998-05-01
+LILA-Supermercado|Speedy Express|1998-05-01
+White Clover Markets|United Package|1998-05-01
+Drachenblut Delikatessen|United Package|1998-05-04
+Queen Cozinha|United Package|1998-05-04
+Tortuga Restaurante|United Package|1998-05-04
+Lehmanns Marktstand|Speedy Express|1998-05-05
+LILA-Supermercado|Speedy Express|1998-05-05
+Ernst Handel|United Package|1998-05-05
+Pericles Comidas clásicas|United Package|1998-05-05
+
+--7. What is the customer's name and the employee's name for every order shipped to france?
+
+select c.companyname as customerName, (e.firstname||' '|| e.lastname) as employee, o.shipcity from orders as o join customers as c on o.customerid = c.customerid join employees as e on e.employeeid = o.employeeid where o.shipcountry like '%france%' limit 10;
+customerName|employee|ShipCity
+Vins et alcools Chevalier|Steven Buchanan|Reims
+Victuailles en stock|Janet Leverling|Lyon
+Blondesddsl père et fils|Andrew Fuller|Strasbourg
+Vins et alcools Chevalier|Michael Suyama|Reims
+Vins et alcools Chevalier|Andrew Fuller|Reims
+Blondesddsl père et fils|Steven Buchanan|Strasbourg
+Du monde entier|Nancy Davolio|Nantes
+Bon app''|Anne Dodsworth|Marseille
+Victuailles en stock|Laura Callahan|Lyon
+Bon app''|Nancy Davolio|Marseille
+
+--8. List products by name shipped to germany
+
+select p.productname, o.shipcity from orders as o join order_details as d on o.orderid = d.orderid join products as p on d.productid = p.productid where o.shipcountry like'%germany%' limit 10;
+ProductName|ShipCity
+Tofu|Münster
+Manjimup Dried Apples|Münster
+Jack's New England Clam Chowder|Köln
+Ravioli Angelo|Köln
+Tarte au sucre|Köln
+Outback Lager|Köln
+Boston Crab Meat|München
+Raclette Courdavault|München
+Lakkalikööri|München
+Ikura|Cunewalde

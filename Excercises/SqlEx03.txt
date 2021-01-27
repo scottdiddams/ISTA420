@@ -1,0 +1,165 @@
+.headers on
+.separator ''
+
+
+--Name: SCott Diddams
+--Date: 26 Jan 2021
+--Title: SqlEx03
+
+--1. Display the customer ID, customer contact name, employee ID, employee name, Order ID, number of orders, and total cost of each order. Limit to customer/employee pairs with five or more orders between them, ordered by thedollar amount of the order from highest to lowest. (dollar amount has only 2 decimal places, output is comma separated.
+
+select o.customerID||', "', c.contactname||'", ', e.employeeid||', "', e.firstname||' '||e.lastname||'"' as employeeName, count(o.orderid) as numOrders, printf('%.2f',sum(d.unitprice*(1-d.discount)*d.quantity)) as orderTotal from orders as o join customers as c on o.customerid = c.customerid join employees as e on e.employeeid = o.employeeid join order_details as d on d.orderid = o.orderid group by o.orderid having numOrders >= 5 order by orderTotal desc;
+o.customerID||', "'c.contactname||'", 'e.employeeid||', "'employeeNamenumOrdersorderTotal
+QUICK, "Horst Kloss", 2, "Andrew Fuller"59921.30
+ERNSH, "Roland Mendel", 3, "Janet Leverling"58623.45
+BLONP, "Frédérique Citeaux", 4, "Margaret Peacock"57390.20
+SAVEA, "Jose Pavarotti", 5, "Steven Buchanan"56475.40
+SAVEA, "Jose Pavarotti", 1, "Nancy Davolio"56375.00
+QUICK, "Horst Kloss", 3, "Janet Leverling"56306.24
+KOENE, "Philip Cramer", 9, "Anne Dodsworth"55502.11
+SAVEA, "Jose Pavarotti", 9, "Anne Dodsworth"55275.72
+SAVEA, "Jose Pavarotti", 4, "Margaret Peacock"64931.92
+ERNSH, "Roland Mendel", 8, "Laura Callahan"64813.50
+ERNSH, "Roland Mendel", 7, "Robert King"54705.50
+SAVEA, "Jose Pavarotti", 2, "Andrew Fuller"64371.60
+SAVEA, "Jose Pavarotti", 1, "Nancy Davolio"54330.40
+SUPRD, "Pascale Cartrain", 7, "Robert King"53891.00
+QUICK, "Horst Kloss", 8, "Laura Callahan"53812.70
+QUICK, "Horst Kloss", 8, "Laura Callahan"53584.00
+WHITC, "Karl Jablonski", 4, "Margaret Peacock"53523.40
+ERNSH, "Roland Mendel", 4, "Margaret Peacock"53436.44
+SAVEA, "Jose Pavarotti", 6, "Michael Suyama"52944.40
+ERNSH, "Roland Mendel", 4, "Margaret Peacock"52900.00
+SAVEA, "Jose Pavarotti", 1, "Nancy Davolio"52556.95
+VAFFE, "Palle Ibsen", 1, "Nancy Davolio"52518.00
+FRANK, "Peter Franken", 4, "Margaret Peacock"52467.00
+SAVEA, "Jose Pavarotti", 6, "Michael Suyama"52393.50
+FRANK, "Peter Franken", 4, "Margaret Peacock"52301.75
+SAVEA, "Jose Pavarotti", 5, "Steven Buchanan"52205.75
+AROUT, "Thomas Hardy", 1, "Nancy Davolio"52142.90
+QUICK, "Horst Kloss", 3, "Janet Leverling"52037.28
+RATTC, "Paula Wilson", 4, "Margaret Peacock"51887.60
+QUEEN, "Lúcia Carvalho", 7, "Robert King"51830.78
+RICSU, "Michael Holz", 1, "Nancy Davolio"51823.80
+HUNGO, "Patricia McKenna", 3, "Janet Leverling"51762.00
+WARTH, "Pirkko Koskitalo", 2, "Andrew Fuller"51546.30
+KOENE, "Philip Cramer", 1, "Nancy Davolio"51497.00
+FRANK, "Peter Franken", 8, "Laura Callahan"51336.95
+RATTC, "Paula Wilson", 1, "Nancy Davolio"251255.72
+QUICK, "Horst Kloss", 2, "Andrew Fuller"510164.80
+
+--2. Now display the least productive pairs where total orders are less than 3, and dollar amounts are less than $50. rank-order by increasing dollar amounts starting with the least order.
+
+select o.customerID||', "', c.contactname||'", ', e.employeeid||', "', e.firstname||' '||e.lastname||'"' as employeeName, count(o.orderid) as numOrders, round(sum(d.unitprice*(1-d.discount)*d.quantity),2) as orderTotal from orders as o join customers as c on o.customerid = c.customerid join employees as e on e.employeeid = o.employeeid join order_details as d on d.orderid = o.orderid group by o.orderid having ordertotal < 50 order by orderTotal asc;
+o.customerID||', "'c.contactname||'", 'e.employeeid||', "'employeeNamenumOrdersorderTotal
+CACTU, "Patricio Simpson", 9, "Anne Dodsworth"112.5
+FRANS, "Paolo Accorti", 4, "Margaret Peacock"118.4
+REGGC, "Maurizio Moroni", 9, "Anne Dodsworth"123.8
+SUPRD, "Pascale Cartrain", 4, "Margaret Peacock"128.0
+OCEAN, "Yvonne Moncada", 4, "Margaret Peacock"130.0
+WELLI, "Paula Parente", 1, "Nancy Davolio"133.75
+LONEP, "Fran Wilson", 8, "Laura Callahan"136.0
+LAMAI, "Annette Roulet", 7, "Robert King"136.0
+SAVEA, "Jose Pavarotti", 2, "Andrew Fuller"140.0
+ISLAT, "Helen Bennett", 4, "Margaret Peacock"145.0
+NORTS, "Simon Crowther", 3, "Janet Leverling"145.0
+SPLIR, "Art Braunschweiger", 6, "Michael Suyama"148.0
+VAFFE, "Palle Ibsen", 8, "Laura Callahan"148.75
+FRANS, "Paolo Accorti", 2, "Andrew Fuller"149.8
+
+--3. Display most productive pairs ranked by the average order amount (only those above $2500).
+
+select o.customerID||', "', c.contactname||'", ', e.employeeid||', "', e.firstname||' '||e.lastname||'"' as employeeName, count(o.orderid) as numOrders, round(avg(d.unitprice*(1-d.discount)*d.quantity),2) as orderTotal from orders as o join customers as c on o.customerid = c.customerid join employees as e on e.employeeid = o.employeeid join order_details as d on d.orderid = o.orderid group by o.orderid having orderTotal >2500 order by orderTotal desc;
+o.customerID||', "'c.contactname||'", 'e.employeeid||', "'employeeNamenumOrdersorderTotal
+HANAR, "Mario Pontes", 1, "Nancy Davolio"115810.0
+QUICK, "Horst Kloss", 2, "Andrew Fuller"28193.75
+RATTC, "Paula Wilson", 9, "Anne Dodsworth"25690.0
+HUNGO, "Patricia McKenna", 3, "Janet Leverling"25417.62
+PICCO, "Georg Pipps", 7, "Robert King"24296.64
+GREAL, "Howard Snyder", 4, "Margaret Peacock"24223.23
+SAVEA, "Jose Pavarotti", 7, "Robert King"43153.76
+HUNGO, "Patricia McKenna", 2, "Andrew Fuller"23100.28
+MEREP, "Jean Fresnière", 7, "Robert King"33064.85
+WHITC, "Karl Jablonski", 2, "Andrew Fuller"32967.5
+SIMOB, "Jytte Petersen", 4, "Margaret Peacock"42797.1
+KOENE, "Philip Cramer", 3, "Janet Leverling"42738.21
+RATTC, "Paula Wilson", 3, "Janet Leverling"42623.9
+QUICK, "Horst Kloss", 3, "Janet Leverling"42547.93
+
+--4. Display least productive pairs by average order amount from lowest to highest (order average less than $50).
+
+select o.customerID||', "', c.contactname||'", ', e.employeeid||', "', e.firstname||' '||e.lastname||'"' as employeeName, count(o.orderid) as numOrders, round(avg(d.unitprice*(1-d.discount)*d.quantity),2) as orderTotal from orders as o join customers as c on o.customerid = c.customerid join employees as e on e.employeeid = o.employeeid join order_details as d on d.orderid = o.orderid group by o.orderid having orderTotal <50 order by orderTotal asc;
+o.customerID||', "'c.contactname||'", 'e.employeeid||', "'employeeNamenumOrdersorderTotal
+CACTU, "Patricio Simpson", 9, "Anne Dodsworth"112.5
+FRANS, "Paolo Accorti", 4, "Margaret Peacock"118.4
+REGGC, "Maurizio Moroni", 9, "Anne Dodsworth"123.8
+SUPRD, "Pascale Cartrain", 4, "Margaret Peacock"128.0
+LAUGB, "Yoshi Tannamuri", 2, "Andrew Fuller"228.75
+ROMEY, "Alejandra Camino", 4, "Margaret Peacock"328.83
+OCEAN, "Yvonne Moncada", 4, "Margaret Peacock"130.0
+WELLI, "Paula Parente", 1, "Nancy Davolio"133.75
+LONEP, "Fran Wilson", 8, "Laura Callahan"136.0
+LAMAI, "Annette Roulet", 7, "Robert King"136.0
+RANCH, "Sergio Gutiérrez", 6, "Michael Suyama"238.0
+SAVEA, "Jose Pavarotti", 2, "Andrew Fuller"140.0
+REGGC, "Maurizio Moroni", 4, "Margaret Peacock"240.05
+FRANS, "Paolo Accorti", 3, "Janet Leverling"244.0
+ANATR, "Ana Trujillo", 7, "Robert King"244.4
+ISLAT, "Helen Bennett", 4, "Margaret Peacock"145.0
+NORTS, "Simon Crowther", 3, "Janet Leverling"145.0
+FRANS, "Paolo Accorti", 1, "Nancy Davolio"246.75
+SPLIR, "Art Braunschweiger", 6, "Michael Suyama"148.0
+VAFFE, "Palle Ibsen", 8, "Laura Callahan"148.75
+FRANS, "Paolo Accorti", 2, "Andrew Fuller"149.8
+
+--5. Display order ID, the customer ID, the customer name, the customer country, and the dollar amount of the order, sorted alphabetically by country and numerically from highest to lowest by the dollar amount of the order, where the order total exceeds $5,000.00
+
+select o.orderid, c.customerid, c.companyname, c.country, round(sum(d.unitprice*(1-d.discount)*d.quantity),2) as orderTotal from orders as o join customers as c on o.customerid = c.customerid join order_details as d on o.orderid = d.orderid group by o.orderid having ordertotal > 5000 order by c.country asc, ordertotal desc;
+
+OrderID|CustomerID|CompanyName|Country|orderTotal
+10514|ERNSH|Ernst Handel|Austria|8623.45
+10353|PICCO|Piccolo und mehr|Austria|8593.28
+11017|ERNSH|Ernst Handel|Austria|6750.0
+10776|ERNSH|Ernst Handel|Austria|6635.28
+10895|ERNSH|Ernst Handel|Austria|6379.4
+10633|ERNSH|Ernst Handel|Austria|5510.59
+10351|ERNSH|Ernst Handel|Austria|5398.73
+11072|ERNSH|Ernst Handel|Austria|5218.0
+10981|HANAR|Hanari Carnes|Brazil|15810.0
+10372|QUEEN|Queen Cozinha|Brazil|9210.9
+10424|MEREP|Mère Paillarde|Canada|9194.56
+10417|SIMOB|Simons bistro|Denmark|11188.4
+10360|BLONP|Blondesddsl père et fils|France|7390.2
+10865|QUICK|QUICK-Stop|Germany|16387.5
+10817|KOENE|Königlich Essen|Germany|10952.85
+10540|QUICK|QUICK-Stop|Germany|10191.7
+10691|QUICK|QUICK-Stop|Germany|10164.8
+10515|QUICK|QUICK-Stop|Germany|9921.3
+11021|QUICK|QUICK-Stop|Germany|6306.24
+10893|KOENE|Königlich Essen|Germany|5502.11
+10897|HUNGO|Hungry Owl All-Night Grocers|Ireland|10835.24
+10912|HUNGO|Hungry Owl All-Night Grocers|Ireland|6200.55
+11030|SAVEA|Save-a-lot Markets|USA|12615.05
+10889|RATTC|Rattlesnake Canyon Grocery|USA|11380.0
+10479|RATTC|Rattlesnake Canyon Grocery|USA|10495.6
+11032|WHITC|White Clover Markets|USA|8902.5
+10816|GREAL|Great Lakes Food Market|USA|8446.45
+10607|SAVEA|Save-a-lot Markets|USA|6475.4
+10612|SAVEA|Save-a-lot Markets|USA|6375.0
+10324|SAVEA|Save-a-lot Markets|USA|5275.72
+10678|SAVEA|Save-a-lot Markets|USA|5256.5
+
+--6. Display distinct cities, regions, and postal codes where
+
+--a: we have both customers and employees
+
+--select distinct c.customerid, e.employeeid, c.city, c.region, c.postalcode from customers as c join employees as e on c.city = e.city group by c.postalcode;
+
+--b. customers but no employees AND both customers and employees
+
+--select distinct c.city, c.region, c.postalcode from customers as c left join employees as e on c.city = e.city group by c.postalcode;
+
+--c. employees but no customers AND both customers & employees
+
+--select distinct c.city, c.region, c.postalcode from employees as e left join customers as c on c.city = e.city group by c.postalcode;
+
