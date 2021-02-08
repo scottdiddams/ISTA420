@@ -1,0 +1,77 @@
+## SQL HW 04
+
+1. In your own words, what is a subquery?
+
+*A subquery is a query within a query that acts siilar to a join statement a "select within a select"*
+
+2. In your own words, what is a self contained subquery?
+
+*A self-contained subquery selects from a table unassociated with the outer query*
+
+3. In your own words, what is a correlated subquery?
+
+*A correlated subquery selects from the same table as the outer query*
+
+4. Give an example of a subquery that returns a single value. When would you use this kind of subquery?
+
+*Scalar subqueries could be used to identify a single key representing a desired feature, and run the outer query to allocate the associated data*
+```
+SELECT orderid, orderdate, empid, custid
+FROM Sales.Orders
+WHERE orderid = (SELECT MAX(O.orderid)
+                 FROM Sales.Orders AS O);
+```
+
+5. Give an example of a subquery that returns multiple values. When would you use this kind of subquery?
+
+*Multivalued subqueries could be used to identify a key column that meets a desired quality and retrieve the associated data*
+```
+SELECT orderid
+FROM Sales.Orders
+WHERE empid IN
+  (SELECT E.empid
+   FROM HR.Employees AS E
+   WHERE E.lastname LIKE N'D%');
+```
+
+6. Give an example of a subquery that returns table values. When would you use this kind of subquery?
+
+*A table subquery would accomplish much of what the JOIN function accomplishes - link different relations*
+
+7. What does the exists predicate do? Give an example.
+
+*EXISTS returns a true or false outcome - for example it can tell you what customers have made purchases in spain:"
+```
+SELECT custid, companyname
+FROM Sales.Customers AS C
+WHERE country = N'Spain'
+  AND EXISTS
+    (SELECT * FROM Sales.Orders AS O
+     WHERE O.custid = C.custid);
+```
+
+8. What happens if we use the not operator before a predicate? Give an example.
+
+*It will tell you what has NOT fulfilled the predicate - ie who has not ordered from spain:*
+```
+SELECT custid, companyname
+FROM Sales.Customers AS C
+WHERE country = N'Spain'
+  AND NOT EXISTS
+    (SELECT * FROM Sales.Orders AS O
+     WHERE O.custid = C.custid);
+```
+
+9. When you use exists or not exists with respect to a row in a database, does it return two or three
+values? Explain your answer.
+
+*It will return the values you ask for*
+
+10. How would you use a subquery to calculate aggregates? For example, you want to calculate yearly
+sales of a product, and you also want to keep a running sum of total sales. Explain how you would use
+a subquery to do this.
+
+*Move the aggregate inside the subquery*
+```
+select sale_quantity, sum((select ...)) as sum_total...
+```

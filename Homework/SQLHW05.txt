@@ -1,0 +1,109 @@
+## SQLHW05
+
+1. What is a table expression? Can you give a technical definition of a table expression?
+
+*a named query expression that represents a valid relational table - can be used in data-manipulation statements much like you use other tables*
+
+2. In what SQL clause are derived tables (table valued subqueries) located?
+
+*Derived tables are defined in the FROM clause*
+
+3. Why can you refer to column aliases in an outer query that you defined in an inner table valued
+subquery?
+
+*the from clause is processed before the select clause - the inner tables are assigned in the from clause of the outer query*
+
+4. What SQL key word defines a common table expression?
+
+*Common table expressions (CTEs) are defined using the WITH statement - below USACusts is the CTE*
+```
+WITH USACusts AS
+(
+  SELECT custid, companyname
+  FROM Sales.Customers
+  WHERE country = N'USA'
+)
+SELECT * FROM USACusts;
+```
+
+5. When using common table expressions, can a subsequent derived table use a table alias declared in a
+preceding table expression?
+
+*yes, as long as it is in scope - Each CTE can refer to all previously defined CTEs and the outer query can refer to all CTEs*
+
+6. Can a main query refer to a previously defined common table expression by multiple aliases?
+
+*Because a CTE is named and defined forst, and then queried allows you to refer to multiple instances of the same CTE in table operations like joins*
+```
+WITH YearlyCount AS
+(
+  SELECT YEAR(orderdate) AS orderyear,
+    COUNT(DISTINCT custid) AS numcusts
+  FROM Sales.Orders
+  GROUP BY YEAR(orderdate)
+)
+SELECT Cur.orderyear,
+  Cur.numcusts AS curnumcusts, Prv.numcusts AS prvnumcusts,
+  Cur.numcusts - Prv.numcusts AS growth
+FROM YearlyCount AS Cur
+  LEFT OUTER JOIN YearlyCount AS Prv
+    ON Cur.orderyear = Prv.orderyear + 1;
+```
+*here the CTE YearlyCount is defined only once and accessed twice in the FROM clause of the outer query—once as Cur and once as Prv.*
+
+7. In SQL, is a view a durable object?
+
+*A view is a type of table expression whose definitions are permanently stored as objects in the database*
+
+8. In a view, what does WITH CHECK OPTION do? Why is this important?
+
+*the CHECK OPTION is designed to prevent modifications through the view that conflict with the view's filter - this will prevent you from inserting a row that you dont want in the view*
+
+9. In a view, what does SCHEMABINDING do? Why is this important?
+
+*The Schemabinding option binds the schema of referenced objects and columns to the schema of the referencing object. It indicates that referenced objects cannot be dropped and referenced columns cannot be dropped or altered (you will get an error) - important for preserving tables that you need to reference to maintain query integrity*
+
+10. What is a table valued function?
+
+*an inline table-valued function TVF is a reusable table expression that supports input parameters - like a parameterized view*
+```
+CREATE FUNCTION dbo.GetCustOrders
+  (@cid AS INT) RETURNS TABLE
+AS
+RETURN
+  SELECT orderid, custid, empid, orderdate, requireddate,
+    shippeddate, shipperid, freight, shipname, shipaddress, shipcity,
+    shipregion, shippostalcode, shipcountry
+  FROM Sales.Orders
+  WHERE custid = @cid;
+ ```
+*This creates a TVF called GetCustOrders*
+
+11. What does the APPLY operator do?
+
+*similar toa join, the APPLY operator takes two input tables - evaluates the left table first, and then evaluates the right table per row from the left - so that the right table can reference elements from the left*
+
+12. What are the two forms of the APPLY operator? Give an example of each.
+
+*cross apply - similar to cross join - the following returns the three most recent orders from each customer:*
+```
+SELECT C.custid, A.orderid, A.orderdate
+FROM Sales.Customers AS C
+  CROSS APPLY
+    (SELECT TOP (3) orderid, empid, orderdate, requireddate
+     FROM Sales.Orders AS O
+     WHERE O.custid = C.custid
+     ORDER BY orderdate DESC, orderid DESC) AS A;
+```
+
+*outer apply - returns rows from the left side even if there are no matches in the right side - uses NULL as a placeholder*
+```
+SELECT C.custid, A.orderid, A.orderdate
+FROM Sales.Customers AS C
+  OUTER APPLY
+    (SELECT TOP (3) orderid, empid, orderdate, requireddate
+     FROM Sales.Orders AS O
+     WHERE O.custid = C.custid
+     ORDER BY orderdate DESC, orderid DESC) AS A;
+```
+*this will include custid with no orders*

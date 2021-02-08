@@ -31,13 +31,13 @@ select o.orderid, c.customerid, c.companyname, c.country, round(sum(d.unitprice*
 
 --a: we have both customers and employees
 
---select distinct c.customerid, e.employeeid, c.city, c.region, c.postalcode from customers as c join employees as e on c.city = e.city group by c.postalcode;
+select distinct c.customerid, e.employeeid, c.city, c.region, c.postalcode from customers as c join employees as e on c.postalcode = e.postalcode;
 
 --b. customers but no employees AND both customers and employees
 
---select distinct c.city, c.region, c.postalcode from customers as c left join employees as e on c.city = e.city group by c.postalcode;
+--select distinct c.customerid, e.employeeid, c.city, c.region, c.postalcode from customers as c left join employees as e on c.postalcode = e.postalcode;
 
 --c. employees but no customers AND both customers & employees
 
---select distinct c.city, c.region, c.postalcode from employees as e left join customers as c on c.city = e.city group by c.postalcode;
+--select distinct c.customerid, e.employeeid, c.city, c.region, c.postalcode from employees as e left join customers as c on c.postalcode = e.postalcode;
 
