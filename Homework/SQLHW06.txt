@@ -60,3 +60,9 @@ except
 select * from numbers where (num % 3) = 0
 )
 ```
+
+
+Logical operators
+- and (&&) - Intersect does this
+- or (||) - Union does this
+- not (!) - Except does this
