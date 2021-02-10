@@ -1,0 +1,73 @@
+## SQLHW07
+
+1. What is a window function?
+
+*A function that, for each row, computes a scaler result value (simple single numeric value) based on a calculation against a subset of the rows (the window) from the underlying query. The syntax is the OVER clause*
+
+2. What does PARTITION do?
+
+*restricts the window to a subset of rows that have the same values in the partitioning columns as in the current row. ie - partition by empid to have all rows accosiated with empid 1 populate at the top, followed by empid 2 etc...*
+
+3. What does ORDER BY do?
+
+*orders in support of a frame specification - a compartmentalized ORDER BY*
+
+4. What does ROWS BETWEEN do?
+
+*filters the frame or subset of rows from the window partition between two specified delimiters (x AND y) - ie -*
+```
+ELECT empid, ordermonth, val,
+  SUM(val) OVER(PARTITION BY empid
+                ORDER BY ordermonth
+                ROWS BETWEEN UNBOUNDED PRECEDING --unbound preceding means all previous rows (sums everything up to that point)
+                         AND CURRENT ROW) AS runval
+FROM Sales.EmpOrders;
+```
+
+5. What is a ranking window function? Why would you use it? Give an example.
+
+*used to rank each row with respect to others in the window. there are four ranking functions:*
+```
+ROW_NUMBER() -- assigns incremental sequential integers
+RANK() -- reflects the count of rows that have a lower ordering value
+DENSE_RANK() -- reflects the count of distinct ordering values below the ordering value.
+NTILE(number of tiles requested) -- Used to associate the rows with "tiles" (equallysized groups of rows) by assigning a tile number to each row.
+```
+
+6. What is an offset window function? Why would you use it? Give an example.
+
+*used to return an element from a row that is at a certain offset from the current row or at the end of a window frame*
+
+7. What do LEAD and LAG DO
+
+*Used to obtain an element from a row that is at a certain offset from the current row within the partition, based on the indicated ordering*
+```
+LAG(element [, offset]) -- looks before the current row
+LEAD(element [, offset]) -- looks ahead of the current row
+
+8. What do FIRST VALUE and LAST VALUE do?
+
+*used to return an element from the first and last rows in the window frame, respectively.*
+
+9. What is an aggragate window function? Why would you use it? Give an example.
+
+*use the OVER keyword - Perform calculations across a set of rows and returns an additional column attached to each row with the result - could be useful for comparrisons*
+
+10. What is a pivot table and what does it do?
+
+*PIVOT converts rows into columns*
+
+11. In mathematical theory, what is a power set? How does this definition of power set relate to grouping
+sets?
+
+*The powerset of set S is all subsets of S - a grouping set is a set of expressions you group the data by in a grouped query (using GROUP BY) - a powerset would be a set of all possible grouped queries in a table*
+
+12. What is a bit array? How can you implement a bit array to represent a set of flags? How does the
+GROUPING ID() function implement a bit array?
+
+*a bit array is an array of boolean values - grouping_ID returns an integer value of the level of grouping and can be used to return a 1 or 0*
+
+13. Read the documentation on the UNIX/Linux chmod command. How would interpret this command:
+chmod 755 myscript.sql?
+
+*chmod (change mode) changes the access permissions of file system objects - 755 = (7) read/write/execute for User class, (5) read/execute for group class, (5) read/execute for other class
